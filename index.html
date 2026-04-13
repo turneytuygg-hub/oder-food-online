@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodDash | Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo" onclick="window.location.href='index.html'">
+            <h1>🍔 FoodDash</h1>
+            <span>Fast delivery to your door</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="fastfood.html">🍟 Fast Food</a>
+            <a href="snacks.html">🍿 Snacks</a>
+            <a href="seafood.html">🦞 Seafood</a>
+            <a href="tea-coffee.html">☕ Tea & Coffee</a>
+            <a href="bakery.html">🥖 Bakery</a>
+            <button class="cart-btn" onclick="window.location.href='cart.html'">
+                🛒 Cart <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="hero">
+        <h2>Craving something delicious?</h2>
+        <p>Browse our menu and order your favorite meals</p>
+    </div>
+
+    <div class="categories">
+        <h2 class="section-title">📂 Browse by Category</h2>
+        <div class="category-grid">
+            <a href="fastfood.html" class="category-card"><div class="category-icon">🍟</div><h4>Fast Food</h4></a>
+            <a href="snacks.html" class="category-card"><div class="category-icon">🍿</div><h4>Snacks</h4></a>
+            <a href="seafood.html" class="category-card"><div class="category-icon">🦞</div><h4>Seafood</h4></a>
+            <a href="tea-coffee.html" class="category-card"><div class="category-icon">☕</div><h4>Tea & Coffee</h4></a>
+            <a href="bakery.html" class="category-card"><div class="category-icon">🥖</div><h4>Bakery</h4></a>
+        </div>
+    </div>
+
+    <div id="foodGrid" class="food-grid"></div>
+
+    <div class="footer">
+        <p>© FoodDash | Delivering happiness to your door</p>
+    </div>
+
+    <script>
+        const foods = [
+            { id: 1, name: "Classic Burger", category: "fastfood", desc: "Beef patty, lettuce, tomato, cheese", price: 800, image: "🍔", imgUrl: "https://i.pinimg.com/736x/37/00/ef/3700ef80f448d2a59dd80a78debce0c6.jpg" },
+            { id: 2, name: "French Fries", category: "fastfood", desc: "Crispy golden fries with salt", price: 300, image: "🍟", imgUrl: "https://i.pinimg.com/1200x/db/bd/a5/dbbda53033e03f76810a4c32aae3a326.jpg" },
+            { id: 3, name: "Fried Chicken", category: "fastfood", desc: "Crispy fried chicken (2 pcs)", price: 600, image: "🍗", imgUrl: "https://i.pinimg.com/736x/dd/11/d0/dd11d06abdbc2c80bd106b9e15ef0731.jpg" },
+            { id: 4, name: "Chicken Nuggets", category: "fastfood", desc: "10 pcs with dipping sauce", price: 500, image: "🍗", imgUrl: "https://i.pinimg.com/1200x/34/e0/90/34e090fc554006740f7deddfac908706.jpg" },
+            { id: 5, name: "Hot Dog", category: "fastfood", desc: "Grilled sausage with toppings", price: 450, image: "🌭", imgUrl: "https://i.pinimg.com/1200x/45/6b/f6/456bf628a291f12c20dc0804d81e5b14.jpg" },
+            { id: 6, name: "Onion Rings", category: "fastfood", desc: "Crispy battered onion rings", price: 350, image: "🧅", imgUrl: "https://i.pinimg.com/736x/1e/5c/72/1e5c72fa7b9a584848a0ec2bfe37c4df.jpg" },
+            { id: 7, name: "Popcorn", category: "snacks", desc: "Buttered popcorn, large", price: 250, image: "🍿", imgUrl: "https://i.pinimg.com/1200x/e6/1d/e4/e61de4d3c97bb7c1e5ecbbbdb757e941.jpg" },
+            { id: 8, name: "Nachos", category: "snacks", desc: "Tortilla chips with cheese sauce", price: 400, image: "🌮", imgUrl: "https://i.pinimg.com/736x/7f/0c/2d/7f0c2d75b61058599a440be9b840967b.jpg" },
+            { id: 9, name: "Spring Rolls", category: "snacks", desc: "Vegetable spring rolls (4 pcs)", price: 350, image: "🥟", imgUrl: "https://i.pinimg.com/736x/5b/87/46/5b87466c6e60930ab3b545e736260c78.jpg" },
+            { id: 10, name: "Samosa", category: "snacks", desc: "Spiced potato filling (3 pcs)", price: 200, image: "🥟", imgUrl: "https://i.pinimg.com/736x/aa/9f/ad/aa9fad515906d7e21833e68c8d877c2a.jpg" },
+            { id: 11, name: "Mozzarella Sticks", category: "snacks", desc: "5 pcs with marinara sauce", price: 450, image: "🧀", imgUrl: "https://i.pinimg.com/736x/7e/39/f1/7e39f1ad2abfcf9e1d0cc9534fe090f9.jpg" },
+            { id: 12, name: "Chicken Wings", category: "snacks", desc: "6 pcs with choice of sauce", price: 550, image: "🍗", imgUrl: "https://i.pinimg.com/736x/9c/99/06/9c9906aaa6b634e2621bfca8201ef5bd.jpg" },
+            { id: 13, name: "Grilled Salmon", category: "seafood", desc: "Fresh salmon with lemon butter sauce", price: 1800, image: "🐟", imgUrl: "https://i.pinimg.com/736x/46/ae/23/46ae2311a45628075774d33eda5e73d0.jpg" },
+            { id: 14, name: "Fish & Chips", category: "seafood", desc: "Battered fish with fries", price: 1200, image: "🐟", imgUrl: "https://i.pinimg.com/1200x/53/f5/6c/53f56ceab9bc38922c4439fc97cd70fb.jpg" },
+            { id: 15, name: "Shrimp Scampi", category: "seafood", desc: "Garlic butter shrimp with pasta", price: 1600, image: "🦐", imgUrl: "https://i.pinimg.com/1200x/5e/f3/59/5ef3594a7a9371d0899b95046271c68d.jpg" },
+            { id: 16, name: "Crab Cakes", category: "seafood", desc: "2 pcs with remoulade sauce", price: 1400, image: "🦀", imgUrl: "https://i.pinimg.com/736x/f5/84/d2/f584d207ce40659122e66699f8aa94c2.jpg" },
+            { id: 17, name: "Lobster Tail", category: "seafood", desc: "Grilled with garlic butter", price: 2500, image: "🦞", imgUrl: "https://i.pinimg.com/736x/5e/1b/f0/5e1bf04fb41541a9cabb2233850c7225.jpg" },
+            { id: 18, name: "Seafood Paella", category: "seafood", desc: "Mixed seafood with saffron rice", price: 2200, image: "🥘", imgUrl: "https://i.pinimg.com/736x/8a/bb/7d/8abb7ddd555ad963c4fbe0cd129c862f.jpg" },
+            { id: 19, name: "Cappuccino", category: "tea-coffee", desc: "Espresso, steamed milk, foam", price: 350, image: "☕", imgUrl: "https://i.pinimg.com/736x/52/41/31/52413159c7f291bbc186422481b3ac50.jpg" },
+            { id: 20, name: "Latte", category: "tea-coffee", desc: "Smooth espresso with milk", price: 380, image: "☕", imgUrl: "https://i.pinimg.com/736x/b8/4c/9d/b84c9db0910aa8247d79b69a4ecd1438.jpg" },
+            { id: 21, name: "Masala Chai", category: "tea-coffee", desc: "Spiced Indian tea with milk", price: 250, image: "🍵", imgUrl: "https://i.pinimg.com/736x/a1/16/c8/a116c8bba3420dd89a67e39434a4d0d6.jpg" },
+            { id: 22, name: "Green Tea", category: "tea-coffee", desc: "Fresh brewed green tea", price: 200, image: "🍵", imgUrl: "https://i.pinimg.com/736x/c0/3b/d1/c03bd159756dc48babac8ac73dabe696.jpg" },
+            { id: 23, name: "Espresso", category: "tea-coffee", desc: "Strong single shot", price: 250, image: "☕", imgUrl: "https://i.pinimg.com/736x/4c/28/e2/4c28e2420bf38c50120dba0cbaf42e8d.jpg" },
+            { id: 24, name: "Iced Coffee", category: "tea-coffee", desc: "Chilled coffee with ice", price: 300, image: "🧋", imgUrl: "https://i.pinimg.com/736x/da/6f/3a/da6f3a6305596079b891bdb35d53b5f4.jpg" },
+            { id: 25, name: "Croissant", category: "bakery", desc: "Buttery, flaky pastry", price: 250, image: "🥐", imgUrl: "https://i.pinimg.com/736x/f8/82/8e/f8828e68483d5db8384de415b707d0ec.jpg" },
+            { id: 26, name: "Chocolate Cake Slice", category: "bakery", desc: "Rich chocolate layer cake", price: 350, image: "🍰", imgUrl: "https://i.pinimg.com/736x/51/56/76/515676b734cf7760ce1456248fbf07a5.jpg" },
+            { id: 27, name: "Blueberry Muffin", category: "bakery", desc: "Fresh baked with real blueberries", price: 200, image: "🧁", imgUrl: "https://i.pinimg.com/736x/60/77/b0/6077b036565b305d54fa6a8f272bb8e9.jpg" },
+            { id: 28, name: "Baguette", category: "bakery", desc: "Fresh French bread", price: 180, image: "🥖", imgUrl: "https://i.pinimg.com/1200x/3e/4f/21/3e4f2182adbb9752d2d173384cbd75d9.jpg" },
+            { id: 29, name: "Cinnamon Roll", category: "bakery", desc: "Warm with cream cheese icing", price: 280, image: "🥨", imgUrl: "https://i.pinimg.com/736x/67/da/d7/67dad7b7c003bfb1e73387bfcad91faa.jpg" },
+            { id: 30, name: "Banana Butter Cake", category: "bakery", desc: "Moist banana cake with butter glaze", price: 320, image: "🍌🍰", imgUrl: "https://i.pinimg.com/1200x/98/5f/83/985f83882eb912e632a3cc118d988fcb.jpg" }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('fooddash_cart')) || [];
+
+        function saveCart() { localStorage.setItem('fooddash_cart', JSON.stringify(cart)); updateCartCount(); }
+
+        function updateCartCount() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartCountSpan = document.getElementById('cartCount');
+            if (cartCountSpan) cartCountSpan.innerText = totalItems;
+        }
+
+        function addToCart(food) {
+            const existing = cart.find(item => item.name === food.name);
+            if (existing) { existing.quantity += 1; } 
+            else { cart.push({ name: food.name, price: food.price, quantity: 1, image: food.image }); }
+            saveCart();
+            alert(`✅ ${food.name} added to cart!`);
+        }
+
+        window.addToCart = addToCart;
+
+        function renderFoods() {
+            const grid = document.getElementById('foodGrid');
+            grid.innerHTML = foods.map(food => `
+                <div class="food-card">
+                    <div class="food-image"><img src="${food.imgUrl}" alt="${food.name}" onerror="this.style.display='none'; this.parentElement.innerHTML='${food.image}'" style="width:100%; height:100%; object-fit:cover;"></div>
+                    <div class="food-info">
+                        <h3>${food.name}</h3>
+                        <div class="food-desc">${food.desc}</div>
+                        <div class="food-price">KSH ${food.price.toLocaleString()}</div>
+                        <button class="add-btn" onclick="addToCart({name:'${food.name}', price:${food.price}, image:'${food.image}'})">Add to Cart</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        renderFoods();
+        updateCartCount();
+    </script>
+</body>
+</html>

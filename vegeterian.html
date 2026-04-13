@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodDash | Vegetarian</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, 'Segoe UI', sans-serif; background: #f8f9fa; color: #333; }
+        .header { background: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .logo h1 { font-size: 1.8rem; color: #ff6b35; cursor: pointer; }
+        .logo span { font-size: 0.8rem; color: #666; }
+        .nav-links { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+        .nav-links a { text-decoration: none; color: #555; font-weight: 500; }
+        .nav-links a:hover, .nav-links a.active { color: #ff6b35; }
+        .cart-btn { background: #ff6b35; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 30px; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+        .cart-count { background: white; color: #ff6b35; border-radius: 50%; padding: 0.2rem 0.6rem; font-size: 0.8rem; }
+        .hero { background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; text-align: center; padding: 2rem; }
+        .hero h2 { font-size: 2rem; }
+        .food-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; padding: 2rem; max-width: 1200px; margin: 0 auto; }
+        .food-card { background: white; border-radius: 1rem; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.2s; }
+        .food-card:hover { transform: translateY(-5px); }
+        .food-image { width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; font-size: 4rem; background: #f0f0f0; }
+        .food-info { padding: 1rem; }
+        .food-info h3 { margin-bottom: 0.3rem; }
+        .food-desc { color: #777; font-size: 0.8rem; margin-bottom: 0.5rem; }
+        .food-price { color: #ff6b35; font-size: 1.3rem; font-weight: bold; margin-bottom: 0.5rem; }
+        .add-btn { width: 100%; background: #ff6b35; color: white; border: none; padding: 0.6rem; border-radius: 0.5rem; cursor: pointer; font-weight: bold; }
+        .add-btn:hover { background: #e55a2b; }
+        .footer { text-align: center; padding: 2rem; background: #333; color: white; margin-top: 2rem; }
+        @media (max-width: 700px) { .header { flex-direction: column; } .nav-links { justify-content: center; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo" onclick="window.location.href='index.html'"><h1>🍔 FoodDash</h1><span>Fast delivery</span></div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="fastfood.html">🍟 Fast Food</a>
+            <a href="snacks.html">🍿 Snacks</a>
+            <a href="vegetarian.html" class="active">🥗 Vegetarian</a>
+            <a href="seafood.html">🦞 Seafood</a>
+            <a href="tea-coffee.html">☕ Tea & Coffee</a>
+            <a href="bakery.html">🥖 Bakery</a>
+            <button class="cart-btn" onclick="window.location.href='cart.html'">🛒 Cart <span class="cart-count" id="cartCount">0</span></button>
+        </div>
+    </div>
+    <div class="hero"><h2>🥗 Vegetarian</h2><p>Healthy, fresh, and delicious meat-free options</p></div>
+    <div id="foodGrid" class="food-grid"></div>
+    <div class="footer"><p>© 2024 FoodDash | Delivering happiness</p></div>
+    <script>
+        // Vegetarian Menu Items
+        const vegetarian = [
+            { id: 1, name: "Veggie Burger", desc: "Plant-based patty, avocado, lettuce, tomato, vegan mayo", price: 750, image: "🥬" },
+            { id: 2, name: "Garden Fresh Salad", desc: "Mixed greens, cherry tomatoes, cucumbers, carrots, balsamic glaze", price: 450, image: "🥗" },
+            { id: 3, name: "Vegetable Pizza", desc: "Bell peppers, mushrooms, olives, red onions, fresh basil", price: 1100, image: "🍕" },
+            { id: 4, name: "Falafel Wrap", desc: "Crispy falafel, hummus, fresh veggies, tahini sauce in pita", price: 600, image: "🌯" },
+            { id: 5, name: "Creamy Mushroom Risotto", desc: "Arborio rice, fresh mushrooms, parmesan, truffle oil", price: 950, image: "🍚" },
+            { id: 6, name: "Stuffed Bell Peppers", desc: "Quinoa, black beans, corn, diced tomatoes, melted cheese", price: 850, image: "🫑" },
+            { id: 7, name: "Paneer Tikka", desc: "Indian cottage cheese marinated in spices, grilled to perfection", price: 650, image: "🧀" },
+            { id: 8, name: "Vegetable Spring Rolls", desc: "Crispy rolls with cabbage, carrots, bell peppers (6 pcs)", price: 400, image: "🥟" },
+            { id: 9, name: "Eggplant Parmesan", desc: "Breaded eggplant layered with marinara and melted cheese", price: 850, image: "🍆" },
+            { id: 10, name: "Quinoa Buddha Bowl", desc: "Quinoa, roasted veggies, chickpeas, avocado, lemon tahini", price: 700, image: "🥣" },
+            { id: 11, name: "Mac & Cheese", desc: "Creamy cheese sauce with elbow pasta, topped with breadcrumbs", price: 550, image: "🧀" },
+            { id: 12, name: "Vegetable Curry", desc: "Mixed vegetables in coconut curry sauce, served with rice", price: 800, image: "🍛" }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('fooddash_cart')) || [];
+
+        function saveCart() { 
+            localStorage.setItem('fooddash_cart', JSON.stringify(cart)); 
+            updateCartCount(); 
+        }
+
+        function updateCartCount() { 
+            const total = cart.reduce((s, i) => s + i.quantity, 0); 
+            const el = document.getElementById('cartCount'); 
+            if(el) el.innerText = total; 
+        }
+
+        function addToCart(food) { 
+            const existing = cart.find(i => i.name === food.name); 
+            if(existing) { 
+                existing.quantity++; 
+            } else { 
+                cart.push({ name: food.name, price: food.price, quantity: 1, image: food.image }); 
+            } 
+            saveCart(); 
+            alert(`✅ ${food.name} added to cart!`); 
+        }
+
+        window.addToCart = addToCart;
+
+        function render() { 
+            const grid = document.getElementById('foodGrid'); 
+            grid.innerHTML = vegetarian.map(f => `
+                <div class="food-card">
+                    <div class="food-image">${f.image}</div>
+                    <div class="food-info">
+                        <h3>${f.name}</h3>
+                        <div class="food-desc">${f.desc}</div>
+                        <div class="food-price">KSH ${f.price.toLocaleString()}</div>
+                        <button class="add-btn" onclick="addToCart({name:'${f.name}', price:${f.price}, image:'${f.image}'})">Add to Cart</button>
+                    </div>
+                </div>
+            `).join(''); 
+        }
+
+        render(); 
+        updateCartCount();
+    </script>
+</body>
+</html>

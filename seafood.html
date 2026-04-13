@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodDash | Seafood</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .food-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .food-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo" onclick="window.location.href='index.html'">
+            <h1>🍔 FoodDash</h1>
+            <span>Fast delivery</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="fastfood.html">🍟 Fast Food</a>
+            <a href="snacks.html">🍿 Snacks</a>
+            <a href="seafood.html" class="active">🦞 Seafood</a>
+            <a href="tea-coffee.html">☕ Tea & Coffee</a>
+            <a href="bakery.html">🥖 Bakery</a>
+            <!-- Vegetarian category link REMOVED -->
+            <button class="cart-btn" onclick="window.location.href='cart.html'">
+                🛒 Cart <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="hero">
+        <h2>🦞 Seafood</h2>
+        <p>Fresh from the ocean to your plate</p>
+    </div>
+
+    <div id="foodGrid" class="food-grid"></div>
+
+    <div class="footer">
+        <p>© 2024 FoodDash | Delivering happiness</p>
+    </div>
+
+    <script>
+        const seafood = [
+            { 
+                id: 1, 
+                name: "Grilled Salmon", 
+                desc: "Fresh salmon with lemon butter sauce", 
+                price: 1800, 
+                image: "🐟",
+                imgUrl: "https://i.pinimg.com/736x/46/ae/23/46ae2311a45628075774d33eda5e73d0.jpg"
+            },
+            { 
+                id: 2, 
+                name: "Fish & Chips", 
+                desc: "Battered fish with fries", 
+                price: 1200, 
+                image: "🐟",
+                imgUrl: "https://i.pinimg.com/1200x/53/f5/6c/53f56ceab9bc38922c4439fc97cd70fb.jpg"
+            },
+            { 
+                id: 3, 
+                name: "Shrimp Scampi", 
+                desc: "Garlic butter shrimp with pasta", 
+                price: 1600, 
+                image: "🦐",
+                imgUrl: "https://i.pinimg.com/1200x/5e/f3/59/5ef3594a7a9371d0899b95046271c68d.jpg"
+            },
+            { 
+                id: 4, 
+                name: "Crab Cakes", 
+                desc: "2 pcs with remoulade sauce", 
+                price: 1400, 
+                image: "🦀",
+                imgUrl: "https://i.pinimg.com/736x/f5/84/d2/f584d207ce40659122e66699f8aa94c2.jpg"
+            },
+            { 
+                id: 5, 
+                name: "Lobster Tail", 
+                desc: "Grilled with garlic butter", 
+                price: 2500, 
+                image: "🦞",
+                imgUrl: "https://i.pinimg.com/736x/5e/1b/f0/5e1bf04fb41541a9cabb2233850c7225.jpg"
+            },
+            { 
+                id: 6, 
+                name: "Seafood Paella", 
+                desc: "Mixed seafood with saffron rice", 
+                price: 2200, 
+                image: "🥘",
+                imgUrl: "https://i.pinimg.com/736x/8a/bb/7d/8abb7ddd555ad963c4fbe0cd129c862f.jpg"
+            }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('fooddash_cart')) || [];
+
+        function saveCart() { 
+            localStorage.setItem('fooddash_cart', JSON.stringify(cart)); 
+            updateCartCount(); 
+        }
+
+        function updateCartCount() { 
+            const total = cart.reduce((s, i) => s + i.quantity, 0); 
+            const el = document.getElementById('cartCount'); 
+            if (el) el.innerText = total; 
+        }
+
+        function addToCart(food) { 
+            const existing = cart.find(i => i.name === food.name); 
+            if (existing) { 
+                existing.quantity++; 
+            } else { 
+                cart.push({ name: food.name, price: food.price, quantity: 1, image: food.image }); 
+            } 
+            saveCart(); 
+            alert(`✅ ${food.name} added to cart!`); 
+        }
+
+        window.addToCart = addToCart;
+
+        function render() { 
+            const grid = document.getElementById('foodGrid'); 
+            grid.innerHTML = seafood.map(f => `
+                <div class="food-card">
+                    <div class="food-image">
+                        <img src="${f.imgUrl}" alt="${f.name}" 
+                             onerror="this.style.display='none'; this.parentElement.innerHTML='${f.image}'" 
+                             style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    <div class="food-info">
+                        <h3>${f.name}</h3>
+                        <div class="food-desc">${f.desc}</div>
+                        <div class="food-price">KSH ${f.price.toLocaleString()}</div>
+                        <button class="add-btn" onclick="addToCart({name:'${f.name}', price:${f.price}, image:'${f.image}'})">Add to Cart</button>
+                    </div>
+                </div>
+            `).join(''); 
+        }
+
+        render(); 
+        updateCartCount();
+    </script>
+</body>
+</html>

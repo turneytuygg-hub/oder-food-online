@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodDash | Your Cart</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            color: #ff6b35;
+            cursor: pointer;
+        }
+
+        .cart-btn {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .cart-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .cart-title {
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .cart-item {
+            background: white;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .item-price {
+            color: #ff6b35;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .qty-btn {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .qty-btn:hover {
+            background: #e55a2b;
+        }
+
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+
+        .remove-btn:hover {
+            background: #c82333;
+        }
+
+        .cart-summary {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .place-order-btn {
+            width: 100%;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .place-order-btn:hover {
+            background: #e55a2b;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 1rem;
+            color: #888;
+        }
+
+        /* Login Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 1rem;
+            color: #ff6b35;
+        }
+
+        .modal-content p {
+            margin-bottom: 1rem;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .modal-btn:hover {
+            background: #e55a2b;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            background: #333;
+            color: white;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 700px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .cart-item {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo" onclick="window.location.href='index.html'">
+            <h1>🍔 FoodDash</h1>
+        </div>
+        <button class="cart-btn" onclick="window.location.href='index.html'">← Continue Shopping</button>
+    </div>
+
+    <div class="cart-container">
+        <h2 class="cart-title">🛒 Your Cart</h2>
+        <div id="cartItems"></div>
+    </div>
+
+    <div class="footer">
+        <p>© FoodDash | Delivering happiness</p>
+    </div>
+
+    <!-- Login Modal - Only appears when placing order -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h3>🔐 Login to Place Order</h3>
+            <p>Please enter your email and password to complete your order</p>
+            <input type="email" id="loginEmail" placeholder="Email address" autocomplete="off">
+            <input type="password" id="loginPassword" placeholder="Password" autocomplete="off">
+            <button class="modal-btn" id="loginSubmit">Place Order</button>
+        </div>
+    </div>
+
+    <script>
+        // Cart data
+        let cart = JSON.parse(localStorage.getItem('fooddash_cart')) || [];
+
+        function saveCart() { 
+            localStorage.setItem('fooddash_cart', JSON.stringify(cart)); 
+            renderCart(); 
+        }
+
+        function updateQuantity(index, change) {
+            const newQty = cart[index].quantity + change;
+            if (newQty <= 0) { 
+                cart.splice(index, 1); 
+            } else { 
+                cart[index].quantity = newQty; 
+            }
+            saveCart();
+        }
+
+        function removeItem(index) { 
+            cart.splice(index, 1); 
+            saveCart(); 
+        }
+
+        function getTotal() { 
+            return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0); 
+        }
+
+        // Show login modal when user clicks "Place Order"
+        function showLoginModal() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            document.getElementById('loginModal').classList.add('active');
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        // Place order after login
+        function placeOrder() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+            
+            // Simple email validation
+            const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            // ANY email + password is accepted
+            const total = getTotal();
+            alert(`✅ Order placed successfully!\n\nEmail: ${email}\nTotal: KSH ${total.toLocaleString()}\n\nYour food will be delivered in 30-45 minutes.\nThank you for ordering with FoodDash!`);
+            
+            // Clear cart after order
+            cart = [];
+            saveCart();
+            
+            // Close modal
+            document.getElementById('loginModal').classList.remove('active');
+        }
+
+        // Modal controls
+        const modal = document.getElementById('loginModal');
+        const closeModal = document.getElementById('closeModal');
+
+        closeModal.onclick = () => { modal.classList.remove('active'); };
+        window.onclick = (e) => { if (e.target === modal) modal.classList.remove('active'); };
+
+        document.getElementById('loginSubmit').onclick = placeOrder;
+
+        // Enter key support
+        document.getElementById('loginPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') { placeOrder(); }
+        });
+
+        // Render cart
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            if (cart.length === 0) { 
+                container.innerHTML = '<div class="empty-cart">🛒 Your cart is empty. Start adding delicious food!</div>'; 
+                return; 
+            }
+            
+            let total = getTotal();
+            let itemsHtml = cart.map((item, index) => `
+                <div class="cart-item">
+                    <div class="item-info">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-price">KSH ${item.price.toLocaleString()}</div>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                    </div>
+                    <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+                </div>
+            `).join('');
+            
+            itemsHtml += `
+                <div class="cart-summary">
+                    <div class="total-row">
+                        <span>Total:</span>
+                        <span>KSH ${total.toLocaleString()}</span>
+                    </div>
+                    <button class="place-order-btn" onclick="showLoginModal()">Place Order</button>
+                </div>
+            `;
+            
+            container.innerHTML = itemsHtml;
+        }
+
+        // Make functions global for onclick
+        window.updateQuantity = updateQuantity;
+        window.removeItem = removeItem;
+        window.showLoginModal = showLoginModal;
+
+        renderCart();
+    </script>
+</body>
+</html>

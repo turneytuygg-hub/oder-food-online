@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodDash | Snacks</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .food-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .food-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo" onclick="window.location.href='index.html'">
+            <h1>🍔 FoodDash</h1>
+            <span>Fast delivery</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="fastfood.html">🍟 Fast Food</a>
+            <a href="snacks.html" class="active">🍿 Snacks</a>
+            <a href="seafood.html">🦞 Seafood</a>
+            <a href="tea-coffee.html">☕ Tea & Coffee</a>
+            <a href="bakery.html">🥖 Bakery</a>
+            <button class="cart-btn" onclick="window.location.href='cart.html'">
+                🛒 Cart <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="hero">
+        <h2>🍿 Snacks</h2>
+        <p>Perfect for any time of day</p>
+    </div>
+
+    <div id="foodGrid" class="food-grid"></div>
+
+    <div class="footer">
+        <p>© 2024 FoodDash | Delivering happiness</p>
+    </div>
+
+    <script>
+        const snacks = [
+            { 
+                id: 1, 
+                name: "Popcorn", 
+                desc: "Buttered popcorn, large", 
+                price: 250, 
+                image: "🍿",
+                imgUrl: "https://i.pinimg.com/1200x/e6/1d/e4/e61de4d3c97bb7c1e5ecbbbdb757e941.jpg"
+            },
+            { 
+                id: 2, 
+                name: "Nachos", 
+                desc: "Tortilla chips with cheese sauce", 
+                price: 400, 
+                image: "🌮",
+                imgUrl: "https://i.pinimg.com/736x/7f/0c/2d/7f0c2d75b61058599a440be9b840967b.jpg"
+            },
+            { 
+                id: 3, 
+                name: "Spring Rolls", 
+                desc: "Vegetable spring rolls (4 pcs)", 
+                price: 350, 
+                image: "🥟",
+                imgUrl: "https://i.pinimg.com/736x/5b/87/46/5b87466c6e60930ab3b545e736260c78.jpg"
+            },
+            { 
+                id: 4, 
+                name: "Samosa", 
+                desc: "Spiced potato filling (3 pcs)", 
+                price: 200, 
+                image: "🥟",
+                imgUrl: "https://i.pinimg.com/736x/aa/9f/ad/aa9fad515906d7e21833e68c8d877c2a.jpg"
+            },
+            { 
+                id: 5, 
+                name: "Mozzarella Sticks", 
+                desc: "5 pcs with marinara sauce", 
+                price: 450, 
+                image: "🧀",
+                imgUrl: "https://i.pinimg.com/736x/7e/39/f1/7e39f1ad2abfcf9e1d0cc9534fe090f9.jpg"
+            },
+            { 
+                id: 6, 
+                name: "Chicken Wings", 
+                desc: "6 pcs with choice of sauce", 
+                price: 550, 
+                image: "🍗",
+                imgUrl: "https://i.pinimg.com/736x/9c/99/06/9c9906aaa6b634e2621bfca8201ef5bd.jpg"
+            }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('fooddash_cart')) || [];
+
+        function saveCart() { 
+            localStorage.setItem('fooddash_cart', JSON.stringify(cart)); 
+            updateCartCount(); 
+        }
+
+        function updateCartCount() { 
+            const total = cart.reduce((s, i) => s + i.quantity, 0); 
+            const el = document.getElementById('cartCount'); 
+            if (el) el.innerText = total; 
+        }
+
+        function addToCart(food) { 
+            const existing = cart.find(i => i.name === food.name); 
+            if (existing) { 
+                existing.quantity++; 
+            } else { 
+                cart.push({ name: food.name, price: food.price, quantity: 1, image: food.image }); 
+            } 
+            saveCart(); 
+            alert(`✅ ${food.name} added to cart!`); 
+        }
+
+        window.addToCart = addToCart;
+
+        function render() { 
+            const grid = document.getElementById('foodGrid'); 
+            grid.innerHTML = snacks.map(f => `
+                <div class="food-card">
+                    <div class="food-image">
+                        <img src="${f.imgUrl}" alt="${f.name}" 
+                             onerror="this.style.display='none'; this.parentElement.innerHTML='${f.image}'" 
+                             style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    <div class="food-info">
+                        <h3>${f.name}</h3>
+                        <div class="food-desc">${f.desc}</div>
+                        <div class="food-price">KSH ${f.price.toLocaleString()}</div>
+                        <button class="add-btn" onclick="addToCart({name:'${f.name}', price:${f.price}, image:'${f.image}'})">Add to Cart</button>
+                    </div>
+                </div>
+            `).join(''); 
+        }
+
+        render(); 
+        updateCartCount();
+    </script>
+</body>
+</html>

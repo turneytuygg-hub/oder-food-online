@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodDash | Fast Food</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Additional style for food images */
+        .food-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .food-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo" onclick="window.location.href='index.html'">
+            <h1>🍔 FoodDash</h1>
+            <span>Fast delivery</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="fastfood.html" class="active">🍟 Fast Food</a>
+            <a href="snacks.html">🍿 Snacks</a>
+            <a href="seafood.html">🦞 Seafood</a>
+            <a href="tea-coffee.html">☕ Tea & Coffee</a>
+            <a href="bakery.html">🥖 Bakery</a>
+            <button class="cart-btn" onclick="window.location.href='cart.html'">
+                🛒 Cart <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="hero">
+        <h2>🍟 Fast Food</h2>
+        <p>Quick, delicious, and satisfying</p>
+    </div>
+
+    <div id="foodGrid" class="food-grid"></div>
+
+    <div class="footer">
+        <p>© 2024 FoodDash | Delivering happiness</p>
+    </div>
+
+    <script>
+        const fastfood = [
+            { 
+                id: 1, 
+                name: "Classic Burger", 
+                desc: "Beef patty, lettuce, tomato, cheese", 
+                price: 800, 
+                image: "🍔",
+                imgUrl: "https://i.pinimg.com/736x/37/00/ef/3700ef80f448d2a59dd80a78debce0c6.jpg"
+            },
+            { 
+                id: 2, 
+                name: "French Fries", 
+                desc: "Crispy golden fries with salt", 
+                price: 300, 
+                image: "🍟",
+                imgUrl: "https://i.pinimg.com/1200x/db/bd/a5/dbbda53033e03f76810a4c32aae3a326.jpg"
+            },
+            { 
+                id: 3, 
+                name: "Fried Chicken", 
+                desc: "Crispy fried chicken (2 pcs)", 
+                price: 600, 
+                image: "🍗",
+                imgUrl: "https://i.pinimg.com/736x/dd/11/d0/dd11d06abdbc2c80bd106b9e15ef0731.jpg"
+            },
+            { 
+                id: 4, 
+                name: "Chicken Nuggets", 
+                desc: "10 pcs with dipping sauce", 
+                price: 500, 
+                image: "🍗",
+                imgUrl: "https://i.pinimg.com/1200x/34/e0/90/34e090fc554006740f7deddfac908706.jpg"
+            },
+            { 
+                id: 5, 
+                name: "Hot Dog", 
+                desc: "Grilled sausage with toppings", 
+                price: 450, 
+                image: "🌭",
+                imgUrl: "https://i.pinimg.com/1200x/45/6b/f6/456bf628a291f12c20dc0804d81e5b14.jpg"
+            },
+            { 
+                id: 6, 
+                name: "Onion Rings", 
+                desc: "Crispy battered onion rings", 
+                price: 350, 
+                image: "🧅",
+                imgUrl: "https://i.pinimg.com/736x/1e/5c/72/1e5c72fa7b9a584848a0ec2bfe37c4df.jpg"
+            }
+        ];
+
+        let cart = JSON.parse(localStorage.getItem('fooddash_cart')) || [];
+
+        function saveCart() { 
+            localStorage.setItem('fooddash_cart', JSON.stringify(cart)); 
+            updateCartCount(); 
+        }
+
+        function updateCartCount() { 
+            const total = cart.reduce((s, i) => s + i.quantity, 0); 
+            const el = document.getElementById('cartCount'); 
+            if (el) el.innerText = total; 
+        }
+
+        function addToCart(food) { 
+            const existing = cart.find(i => i.name === food.name); 
+            if (existing) { 
+                existing.quantity++; 
+            } else { 
+                cart.push({ name: food.name, price: food.price, quantity: 1, image: food.image }); 
+            } 
+            saveCart(); 
+            alert(`✅ ${food.name} added to cart!`); 
+        }
+
+        window.addToCart = addToCart;
+
+        function render() { 
+            const grid = document.getElementById('foodGrid'); 
+            grid.innerHTML = fastfood.map(f => `
+                <div class="food-card">
+                    <div class="food-image">
+                        <img src="${f.imgUrl}" alt="${f.name}" 
+                             onerror="this.style.display='none'; this.parentElement.innerHTML='${f.image}'" 
+                             style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    <div class="food-info">
+                        <h3>${f.name}</h3>
+                        <div class="food-desc">${f.desc}</div>
+                        <div class="food-price">KSH ${f.price.toLocaleString()}</div>
+                        <button class="add-btn" onclick="addToCart({name:'${f.name}', price:${f.price}, image:'${f.image}'})">Add to Cart</button>
+                    </div>
+                </div>
+            `).join(''); 
+        }
+
+        render(); 
+        updateCartCount();
+    </script>
+</body>
+</html>
